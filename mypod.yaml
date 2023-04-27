@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+  namespace: my-demo
+spec:
+  containers:
+    -  image: alpine:latest 
+       command:
+        - /bin/sh
+        - "-c"
+        - "mkdir /lib64 && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2 &&sleep 60m"
+       imagePullPolicy: IfNotPresent
+       name: mypod
+       volumeMounts:
+        - name: host-mount
+          mountPath: /usr/share/my-host
+       resources:
+         requests:
+            cpu: 10m
+            memory: 64Mi
+         limits:
+            cpu: 200m
+            memory: 256Mi
+  volumes:
+    - name: host-mount
+      hostPath:
+        path: /minikube-mount
+        
